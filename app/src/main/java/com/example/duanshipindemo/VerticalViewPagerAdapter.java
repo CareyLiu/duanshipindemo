@@ -38,8 +38,6 @@ public class VerticalViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-
-        //Toast.makeText(context, position + "", Toast.LENGTH_LONG).show();
         if (mCurTransaction == null) {
             mCurTransaction = fragmentManager.beginTransaction();
         }
@@ -49,18 +47,17 @@ public class VerticalViewPagerAdapter extends PagerAdapter {
             Bundle bundle = new Bundle();
             if (position >= urlList.size()) {
                 bundle.putString(VideoFragment.URL, urlList.get(position % urlList.size()));
+                bundle.putString("page", position + "");
             } else {
                 bundle.putString(VideoFragment.URL, urlList.get(position));
+                bundle.putString("page", position + "");
             }
             fragment.setArguments(bundle);
 
         }
 
-
-        mCurTransaction.add(container.getId(), fragment,
-                makeFragmentName(container.getId(), position));
+        mCurTransaction.add(container.getId(), fragment, makeFragmentName(container.getId(), position));
         fragment.setUserVisibleHint(false);
-
         return fragment;
     }
 
