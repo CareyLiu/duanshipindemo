@@ -1,8 +1,10 @@
 package com.example.duanshipindemo;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,14 +19,16 @@ public class VerticalViewPagerAdapter extends PagerAdapter {
     private FragmentTransaction mCurTransaction;
     private Fragment mCurrentPrimaryItem = null;
     private List<String> urlList;
+    private Context context;
 
     public void setUrlList(List<String> urlList) {
         this.urlList = urlList;
     }
 
 
-    public VerticalViewPagerAdapter(FragmentManager fm) {
+    public VerticalViewPagerAdapter(Context context, FragmentManager fm) {
         this.fragmentManager = fm;
+        this.context = context;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class VerticalViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
+        //Toast.makeText(context, position + "", Toast.LENGTH_LONG).show();
         if (mCurTransaction == null) {
             mCurTransaction = fragmentManager.beginTransaction();
         }
@@ -48,6 +53,7 @@ public class VerticalViewPagerAdapter extends PagerAdapter {
                 bundle.putString(VideoFragment.URL, urlList.get(position));
             }
             fragment.setArguments(bundle);
+
         }
 
 
