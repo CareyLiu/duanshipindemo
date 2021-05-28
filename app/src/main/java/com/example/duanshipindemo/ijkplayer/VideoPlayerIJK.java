@@ -3,6 +3,7 @@ package com.example.duanshipindemo.ijkplayer;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -34,6 +35,7 @@ public class VideoPlayerIJK extends FrameLayout {
     private Context mContext;
 
     private boolean isLord = false;
+    private boolean isPlay = false;
 
     public VideoPlayerIJK(@NonNull Context context) {
         super(context);
@@ -57,19 +59,30 @@ public class VideoPlayerIJK extends FrameLayout {
         setFocusable(true);
     }
 
+    public boolean isPlay() {
+        return isPlay;
+    }
+
+    public void setPlay(boolean play) {
+        isPlay = play;
+    }
+
     /**
      * 设置视频地址。
      * 根据是否第一次播放视频，做不同的操作。
      */
-    public void setVideoPath(String path) {
+    public void setVideoPath(String path, boolean isPlay) {
+        this.isPlay = isPlay;
         if (TextUtils.equals("", mPath)) {
             //如果是第一次播放视频，那就创建一个新的surfaceView
             mPath = path;
             createSurfaceView();
+            Log.e("我是第一次执行的啊啊啊", "");
         } else {
             //否则就直接load
             mPath = path;
             load();
+            Log.e("我是重新加载执行的啊啊啊", "");
         }
     }
 
@@ -126,6 +139,9 @@ public class VideoPlayerIJK extends FrameLayout {
         //给mediaPlayer设置视图
         mMediaPlayer.setDisplay(surfaceView.getHolder());
         mMediaPlayer.prepareAsync();
+        if (!isPlay) {
+//            mMediaPlayer.stop();
+        }
     }
 
     /**
@@ -176,12 +192,14 @@ public class VideoPlayerIJK extends FrameLayout {
      */
     public void start() {
         if (mMediaPlayer != null) {
-            mMediaPlayer.start();
+            Log.e("mMediaPlayer", "start");
+            reLoad();
         }
     }
 
     public void release() {
         if (mMediaPlayer != null) {
+            Log.e("mMediaPlayer", "release");
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
@@ -190,12 +208,14 @@ public class VideoPlayerIJK extends FrameLayout {
 
     public void pause() {
         if (mMediaPlayer != null) {
+            Log.e("mMediaPlayer", "pause");
             mMediaPlayer.pause();
         }
     }
 
     public void stop() {
         if (mMediaPlayer != null) {
+            Log.e("mMediaPlayer", "stop");
             mMediaPlayer.stop();
         }
     }
@@ -203,6 +223,7 @@ public class VideoPlayerIJK extends FrameLayout {
 
     public void reset() {
         if (mMediaPlayer != null) {
+            Log.e("mMediaPlayer", "reset");
             mMediaPlayer.reset();
         }
     }

@@ -36,14 +36,14 @@ public class VideoActivity extends Activity {
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                videoPlayer.setVideoPath(urls.get(0));
+//                videoPlayer.setVideoPath(urls.get(0));
             }
         });
 
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                videoPlayer.setVideoPath(urls.get(1));
+//                videoPlayer.setVideoPath(urls.get(1));
             }
         });
 
@@ -99,6 +99,6 @@ public class VideoActivity extends Activity {
 
         urls.add("http://50069.gzc.svp.tencent-cloud.com/gzc_1000035_0bc3o4aj6aaabaabsad2svqjk56dt53qbh2a.f0.mp4");
         urls.add("http://50069.gzc.svp.tencent-cloud.com/gzc_1000035_0b53quazwaabaiad35vjwjqjjbodtocqdg2a.f0.mp4");
-        videoPlayer.setVideoPath(urls.get(0));
+//        videoPlayer.setVideoPath(urls.get(0));
     }
 }

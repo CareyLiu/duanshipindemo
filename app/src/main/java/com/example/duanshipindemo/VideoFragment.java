@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class VideoFragment extends Fragment {
     private TextView tv_url;
+    private TextView tv_url2;
     private VideoPlayerIJK videoPlayer;
 
     private DrawerLayout dlBackPlay;
@@ -50,14 +52,28 @@ public class VideoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getActivity(), R.layout.layout_video, null);
         tv_url = view.findViewById(R.id.tv_url);
+        tv_url2 = view.findViewById(R.id.tv_url2);
         videoPlayer = view.findViewById(R.id.videoPlayer);
-
         url = getArguments().getString(URL);
         page = getArguments().getString("page");
         tv_url.setText(url);
+        tv_url2.setText(url);
+
+        tv_url.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                videoPlayer.pause();
+            }
+        });
+
+        tv_url2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                videoPlayer.reLoad();
+            }
+        });
 
         initVideo();
-
         return view;
     }
 
@@ -67,6 +83,7 @@ public class VideoFragment extends Fragment {
             IjkMediaPlayer.native_profileBegin("libijkplayer.so");
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("IjkMediaPlayer", "我崩溃了么");
         }
 
 
@@ -93,7 +110,9 @@ public class VideoFragment extends Fragment {
 
             @Override
             public void onPrepared(IMediaPlayer iMediaPlayer) {
-
+                if (!isVisibleToUser) {
+                    videoPlayer.pause();
+                }
             }
 
             @Override
@@ -107,7 +126,9 @@ public class VideoFragment extends Fragment {
             }
         });
         if (isVisibleToUser) {
-            videoPlayer.setVideoPath(url);
+            videoPlayer.setVideoPath(url, true);
+        } else {
+            videoPlayer.setVideoPath(url, false);
         }
     }
 
@@ -118,11 +139,13 @@ public class VideoFragment extends Fragment {
         this.isVisibleToUser = isVisibleToUser;
         if (isVisibleToUser) {
             if (videoPlayer != null) {
-                videoPlayer.setVideoPath(url);
+                videoPlayer.setPlay(true);
+                videoPlayer.reLoad();
             }
         } else {
             if (videoPlayer != null) {
-                videoPlayer.stop();
+                videoPlayer.setPlay(false);
+                videoPlayer.pause();
             }
         }
     }
@@ -150,10 +173,16 @@ public class VideoFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (isVisibleToUser) {
-            Log.e("onDestroyPlay  ", page);
-        } else {
-            Log.e("onDestroyfinish  ", page);
+        try {
+            IjkMediaPlayer.native_profileEnd();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("IjkMediaPlayer", "我崩溃了么");
+        }
+
+        if (videoPlayer != null) {
+            videoPlayer.stop();
+            videoPlayer.release();
         }
     }
 }
